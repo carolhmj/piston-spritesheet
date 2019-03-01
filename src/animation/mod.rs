@@ -9,14 +9,16 @@ use std::result::Result;
 pub struct Animation {
     pub name: String,
     pub framerate: u32,
+    pub extend_frames: bool,
     pub frames: Vec<(f64, f64)>
 }
 
 impl Animation {
-    pub fn new(name: String, framerate: u32, frames: Vec<(f64, f64)>) -> Animation {
+    pub fn new(name: String, framerate: u32, extend_frames: bool, frames: Vec<(f64, f64)>) -> Animation {
         Animation {
             name,
             framerate,
+            extend_frames,
             frames,
         }
     }

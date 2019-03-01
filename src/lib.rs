@@ -145,8 +145,8 @@ impl<'a> SpriteSheet<'a> {
     }
 
     fn update_animation_frame(&mut self, name: &str) -> (f64, f64) {
-        let Animation { frames, .. } = self.animations.get(name).unwrap();
-        let frame_out_of_bounds = self.current_frame >= (frames.len() - 1);
+        let Animation { framerate, extend_frames, frames, .. } = self.animations.get(name).unwrap();
+        let frame_out_of_bounds = self.current_frame >= if !extend_frames{ frames.len() - 1 } else { (framerate - 1) as usize };
         let frame = self.current_frame.clone();
 
         self.current_frame = if frame_out_of_bounds {
@@ -155,7 +155,8 @@ impl<'a> SpriteSheet<'a> {
             self.current_frame + 1
         };
 
-        let (x, y) = *frames.get(frame).unwrap_or(&(0.0, 0.0));
+        let frame_number = if !extend_frames { frame } else { frame / ( *framerate as usize  / frames.len() ) };
+        let (x, y) = *frames.get(frame_number).unwrap_or(&(0.0, 0.0));
 
         (x, y)
     }
